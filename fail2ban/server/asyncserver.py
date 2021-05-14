@@ -24,7 +24,7 @@ __author__ = "Cyril Jaquier"
 __copyright__ = "Copyright (c) 2004 Cyril Jaquier"
 __license__ = "GPL"
 
-from pickle import dumps, loads, HIGHEST_PROTOCOL
+from pickle import dumps, loads, DEFAULT_PROTOCOL
 import asynchat
 import asyncore
 import errno
@@ -109,7 +109,7 @@ class RequestHandler(asynchat.async_chat):
 			else:
 				message = ['SHUTDOWN']
 			# Serializes the response.
-			message = dumps(message, HIGHEST_PROTOCOL)
+			message = dumps(message, DEFAULT_PROTOCOL)
 			# Sends the response to the client.
 			self.push(message + CSPROTO.END)
 		except Exception as e:
@@ -117,7 +117,7 @@ class RequestHandler(asynchat.async_chat):
 				logSys.error("Caught unhandled exception: %r", e,
 					exc_info=logSys.getEffectiveLevel()<=logging.DEBUG)
 			# Sends the response to the client.
-			message = dumps("ERROR: %s" % e, HIGHEST_PROTOCOL)
+			message = dumps("ERROR: %s" % e, DEFAULT_PROTOCOL)
 			self.push(message + CSPROTO.END)
 
 	##
@@ -129,7 +129,7 @@ class RequestHandler(asynchat.async_chat):
 			logSys.error("Unexpected communication error: %s" % str(e2))
 			logSys.error(traceback.format_exc().splitlines())
 			# Sends the response to the client.
-			message = dumps("ERROR: %s" % e2, HIGHEST_PROTOCOL)
+			message = dumps("ERROR: %s" % e2, DEFAULT_PROTOCOL)
 			self.push(message + CSPROTO.END)
 		except Exception as e: # pragma: no cover - normally unreachable
 			pass
